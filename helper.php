@@ -820,7 +820,7 @@ class Helper
             $src = imagecreatefromstring(file_get_contents($path));
         } else {
             // 通过二进制字符串创建图片对象
-            $src = imagecreatefromstring($path);
+            $src = @imagecreatefromstring($path);
         }
         if (!$src) {
             return false;
@@ -894,7 +894,10 @@ class Helper
             return $path;
         }
         // 通过二进制字符串创建图片对象
-        $image   = imagecreatefromstring($path);
+        $image = @imagecreatefromstring($path);
+        if (!$image) {
+            return false;
+        }
         $new_pic = imagecreatetruecolor($w, $h);
         $s_w     = imagesx($image);
         $s_h     = imagesy($image);
@@ -941,13 +944,19 @@ class Helper
             $dist_image = imagecreatefromstring(file_get_contents($dist_path));
         } else {
             // 通过二进制字符串创建图片对象
-            $dist_image = imagecreatefromstring($dist_path);
+            $dist_image = @imagecreatefromstring($dist_path);
+        }
+        if (!$dist_image) {
+            return false;
         }
         $water_image_str = $this->imageChangeSize($water_path, $water_width, $water_height);
         if (!$water_image_str) {
             return false;
         }
-        $water_image  = imagecreatefromstring($water_image_str);
+        $water_image = imagecreatefromstring($water_image_str);
+        if (!$water_image) {
+            return false;
+        }
         $water_width  = imagesx($water_image);
         $water_height = imagesy($water_image);
         imagecopy($dist_image, $water_image, $x, $y, 0, 0, $water_width, $water_height);
@@ -986,6 +995,9 @@ class Helper
             [$w, $h, $type] = getimagesize($path);
         } else {
             [$w, $h, $type] = getimagesizefromstring($path);
+        }
+        if (!$w) {
+            return false;
         }
         // 计算logo占二维码的宽度和高度
         $logo_w = $w / 2.2;
