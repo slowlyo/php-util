@@ -697,7 +697,7 @@ class Helper
     public function getIdCardHometown($id_number)
     {
         if (!file_exists(__DIR__ . '/address-code.php')) {
-            return '';
+            throw new Exception("file address-code.php does not exist");
         }
         $code      = substr($id_number, 0, 6);
         $addresses = require 'address-code.php';
