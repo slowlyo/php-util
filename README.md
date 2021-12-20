@@ -4,6 +4,7 @@
 ```php
 // 直接引用
 require 'helper.php';
+
 // 或者放到 composer.json 中
 {
     "autoload":{
@@ -13,6 +14,8 @@ require 'helper.php';
     }
 }
 
+
+
 // 使用
-Helper::make()->{functionName}();
+Helper::make()->{$functionName}();
 ```
