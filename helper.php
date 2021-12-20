@@ -697,7 +697,7 @@ class Helper
     public function getIdCardHometown($id_number)
     {
         if (!file_exists(__DIR__ . '/address-code.php')) {
-            throw new Exception("file address-code.php does not exist");
+            return '';
         }
         $code      = substr($id_number, 0, 6);
         $addresses = require 'address-code.php';
@@ -803,5 +803,196 @@ class Helper
         curl_close($ci);
 
         return compact('response', 'request_info', 'http_code');
+    }
+
+    /**
+     * 把正方形图片裁剪为圆形
+     *
+     * @param string $path      原图片路径或者二进制字符串
+     * @param string $save_path 裁剪完图片保存路径，如果为空则返回图片的二进制流数据
+     *
+     * @return bool|false|string 如果返回值为false 则裁剪图片失败否则裁剪完成，$save_path为空则返回二进制数据，否则为true
+     */
+    public function imageRound(string $path, string $save_path = '')
+    {
+        if (@is_file($path)) {
+            // 如果传入的是文件路径则打开文件再创建图片
+            $src = imagecreatefromstring(file_get_contents($path));
+        } else {
+            // 通过二进制字符串创建图片对象
+            $src = imagecreatefromstring($path);
+        }
+        if (!$src) {
+            return false;
+        }
+        $w = imagesx($src);
+        $h = imagesy($src);
+        // 新建一个图像
+        $new_pic = imagecreatetruecolor($w, $h);
+        // 关闭图像混色
+        imagealphablending($new_pic, false);
+        // 设置图片保存透明通道
+        imagesavealpha($new_pic, true);
+        // 设置图片透明底色
+        $transparent = imagecolorallocatealpha($new_pic, 0, 0, 0, 127);
+        // 获取圆形半径
+        $r = $w / 2;
+        for ($x = 0; $x < $w; $x++) {
+            for ($y = 0; $y < $h; $y++) {
+                // 获取原图片指定坐标点的像素值
+                $c  = imagecolorat($src, $x, $y);
+                $_x = $x - $w / 2;
+                $_y = $y - $h / 2;
+                if ((($_x * $_x) + ($_y * $_y)) < ($r * $r)) {
+                    // 设置像素颜色值为原图片像素的颜色值
+                    imagesetpixel($new_pic, $x, $y, $c);
+                } else {
+                    // 设置像素颜色值为透明
+                    imagesetpixel($new_pic, $x, $y, $transparent);
+                }
+            }
+        }
+        $data = false;
+        if (!$save_path) {
+            // 如果保存路径为空则创建临时文件
+            $save_path = tempnam(sys_get_temp_dir(), 'image_round');
+            if (imagepng($new_pic, $save_path)) {
+                // 如果图片保存到临时文件成功则读取图片的二进制数据
+                $data = file_get_contents($save_path);
+                // 删除临时文件
+                @unlink($save_path);
+            }
+        } else {
+            // 保存图片到指定路径
+            $data = imagepng($new_pic, $save_path);
+        }
+        // 销毁裁剪为的图片对象
+        imagedestroy($new_pic);
+        // 销毁原图片对象
+        imagedestroy($src);
+
+        return $data;
+    }
+
+    /**
+     * 修改图片大小
+     *
+     * @param string $path      图片路径或者图片二进制数据
+     * @param int    $w         图片宽度
+     * @param int    $h         图片高度
+     * @param string $save_path 保存路径，如果为空则返回图片二进制数据
+     *
+     * @return bool|false|string
+     */
+    public function imageChangeSize(string $path, int $w, int $h, string $save_path = '')
+    {
+        if (@is_file($path)) {
+            // 如果传入的是文件路径则打开文件再创建图片
+            $path = file_get_contents($path);
+        }
+        if (!$w || !$h) {
+            return $path;
+        }
+        // 通过二进制字符串创建图片对象
+        $image   = imagecreatefromstring($path);
+        $new_pic = imagecreatetruecolor($w, $h);
+        $s_w     = imagesx($image);
+        $s_h     = imagesy($image);
+        // 关闭图像混色
+        imagealphablending($new_pic, false);
+        // 设置图片保存透明通道
+        imagesavealpha($new_pic, true);
+        imagecopyresampled($new_pic, $image, 0, 0, 0, 0, $w, $h, $s_w, $s_h);
+        $data = false;
+        if (!$save_path) {
+            // 如果保存路径为空则创建临时文件
+            $save_path = tempnam(sys_get_temp_dir(), 'image_change_size');
+            if (imagepng($new_pic, $save_path)) {
+                // 如果图片保存到临时文件成功则读取图片的二进制数据
+                $data = file_get_contents($save_path);
+                // 删除临时文件
+                @unlink($save_path);
+            }
+        } else {
+            // 保存图片到指定路径
+            $data = imagepng($new_pic, $save_path);
+        }
+        imagedestroy($image);
+        imagedestroy($new_pic);
+
+        return $data;
+    }
+
+    /**
+     * @param string   $dist_path    要添加水印的图片或路径
+     * @param string   $water_path   水印图片或路径
+     * @param int      $x            水印放置X轴位置
+     * @param int      $y            水印放置Y轴位置
+     * @param int|null $water_width  水印图片宽
+     * @param int|null $water_height 水印图片高
+     * @param string   $save_path    加我水印后保存路径如果为空返回图片二进制字符串
+     *
+     * @return bool|false|string
+     */
+    public function addImageWater(string $dist_path, string $water_path, int $x, int $y, int $water_width = null, int $water_height = null, string $save_path = '')
+    {
+        if (@is_file($dist_path)) {
+            // 如果传入的是文件路径则打开文件再创建图片
+            $dist_image = imagecreatefromstring(file_get_contents($dist_path));
+        } else {
+            // 通过二进制字符串创建图片对象
+            $dist_image = imagecreatefromstring($dist_path);
+        }
+        $water_image_str = $this->imageChangeSize($water_path, $water_width, $water_height);
+        if (!$water_image_str) {
+            return false;
+        }
+        $water_image  = imagecreatefromstring($water_image_str);
+        $water_width  = imagesx($water_image);
+        $water_height = imagesy($water_image);
+        imagecopy($dist_image, $water_image, $x, $y, 0, 0, $water_width, $water_height);
+        $data = false;
+        if (!$save_path) {
+            // 如果保存路径为空则创建临时文件
+            $save_path = tempnam(sys_get_temp_dir(), 'image_change_size');
+            if (imagepng($dist_image, $save_path)) {
+                // 如果图片保存到临时文件成功则读取图片的二进制数据
+                $data = file_get_contents($save_path);
+                // 删除临时文件
+                @unlink($save_path);
+            }
+        } else {
+            // 保存图片到指定路径
+            $data = imagepng($dist_image, $save_path);
+        }
+        imagedestroy($dist_image);
+        imagedestroy($water_image);
+
+        return $data;
+    }
+
+    /**
+     * 修改小程序二维码的logo
+     *
+     * @param string $path      小程序码图片或者二进制数据
+     * @param string $logo_path logo图片地址或者二进制数据
+     * @param string $save_path 如果为空则返回图片二进制流字符串
+     *
+     * @return bool|false|string
+     */
+    public function changeMiniProgramLogo(string $path, string $logo_path, string $save_path = '')
+    {
+        if (@is_file($path)) {
+            [$w, $h, $type] = getimagesize($path);
+        } else {
+            [$w, $h, $type] = getimagesizefromstring($path);
+        }
+        // 计算logo占二维码的宽度和高度
+        $logo_w = $w / 2.2;
+        // 计算logo在图片上的位置
+        $x    = ($w - $logo_w) / 2;
+        $logo = $this->imageRound($logo_path);
+
+        return $this->addImageWater($path, $logo, $x, $x, $logo_w, $logo_w, $save_path);
     }
 }
