@@ -1092,4 +1092,14 @@ class Helper
         imagedestroy($dist_image);
         return $data;
     }
+
+    public static function miss($value)
+    {
+        return !isset($value) || empty($value);
+    }
+
+    public static function ok($value)
+    {
+        return isset($value) && !empty($value);
+    }
 }
