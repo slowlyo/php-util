@@ -747,7 +747,7 @@ class Helper
      */
     public function millisecond()
     {
-        return sprintf('%.0f', microtime(true) * 1000);
+        return intval(microtime(true) * 1000);
     }
 
     /**
