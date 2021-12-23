@@ -14,9 +14,13 @@ class Helper
 
     private $pending_date = '';
 
-    private function __construct() { }
+    private function __construct()
+    {
+    }
 
-    private function __clone() { }
+    private function __clone()
+    {
+    }
 
     public static function make()
     {
@@ -94,7 +98,7 @@ class Helper
         if (ord($temp_str) > 127) {
             $str = substr($str, 0, 3);
         } else {
-            $str   = $temp_str;
+            $str = $temp_str;
             $fchar = ord($str[0]);
             if ($fchar >= ord('A') && $fchar <= ord('z')) {
                 return strtoupper($temp_str);
@@ -110,7 +114,7 @@ class Helper
         if (empty($s2)) {
             return null;
         }
-        $s   = $s2 == $str ? $s1 : $str;
+        $s = $s2 == $str ? $s1 : $str;
         $asc = ord($s[0]) * 256 + ord($s[1]) - 65536;
         if ($asc >= -20319 && $asc <= -20284) return 'A';
         if ($asc >= -20283 && $asc <= -19776) return 'B';
@@ -146,66 +150,66 @@ class Helper
     public function rareWords($asc = '')
     {
         $rare_arr = [
-            -3652  => ['word' => "窦", 'first_char' => 'D'],
-            -8503  => ['word' => "奚", 'first_char' => 'X'],
-            -9286  => ['word' => "酆", 'first_char' => 'F'],
-            -7761  => ['word' => "岑", 'first_char' => 'C'],
-            -5128  => ['word' => "滕", 'first_char' => 'T'],
-            -9479  => ['word' => "邬", 'first_char' => 'W'],
-            -5456  => ['word' => "臧", 'first_char' => 'Z'],
-            -7223  => ['word' => "闵", 'first_char' => 'M'],
-            -2877  => ['word' => "裘", 'first_char' => 'Q'],
-            -6191  => ['word' => "缪", 'first_char' => 'M'],
-            -5414  => ['word' => "贲", 'first_char' => 'B'],
-            -4102  => ['word' => "嵇", 'first_char' => 'J'],
-            -8969  => ['word' => "荀", 'first_char' => 'X'],
-            -4938  => ['word' => "於", 'first_char' => 'Y'],
-            -9017  => ['word' => "芮", 'first_char' => 'R'],
-            -2848  => ['word' => "羿", 'first_char' => 'Y'],
-            -9477  => ['word' => "邴", 'first_char' => 'B'],
-            -9485  => ['word' => "隗", 'first_char' => 'K'],
-            -6731  => ['word' => "宓", 'first_char' => 'M'],
-            -9299  => ['word' => "郗", 'first_char' => 'X'],
-            -5905  => ['word' => "栾", 'first_char' => 'L'],
-            -4393  => ['word' => "钭", 'first_char' => 'T'],
-            -9300  => ['word' => "郜", 'first_char' => 'G'],
-            -8706  => ['word' => "蔺", 'first_char' => 'L'],
-            -3613  => ['word' => "胥", 'first_char' => 'X'],
-            -8777  => ['word' => "莘", 'first_char' => 'S'],
-            -6708  => ['word' => "逄", 'first_char' => 'P'],
-            -9302  => ['word' => "郦", 'first_char' => 'L'],
-            -5965  => ['word' => "璩", 'first_char' => 'Q'],
-            -6745  => ['word' => "濮", 'first_char' => 'P'],
-            -4888  => ['word' => "扈", 'first_char' => 'H'],
-            -9309  => ['word' => "郏", 'first_char' => 'J'],
-            -5428  => ['word' => "晏", 'first_char' => 'Y'],
-            -2849  => ['word' => "暨", 'first_char' => 'J'],
-            -7206  => ['word' => "阙", 'first_char' => 'Q'],
-            -4945  => ['word' => "殳", 'first_char' => 'S'],
-            -9753  => ['word' => "夔", 'first_char' => 'K'],
+            -3652 => ['word' => "窦", 'first_char' => 'D'],
+            -8503 => ['word' => "奚", 'first_char' => 'X'],
+            -9286 => ['word' => "酆", 'first_char' => 'F'],
+            -7761 => ['word' => "岑", 'first_char' => 'C'],
+            -5128 => ['word' => "滕", 'first_char' => 'T'],
+            -9479 => ['word' => "邬", 'first_char' => 'W'],
+            -5456 => ['word' => "臧", 'first_char' => 'Z'],
+            -7223 => ['word' => "闵", 'first_char' => 'M'],
+            -2877 => ['word' => "裘", 'first_char' => 'Q'],
+            -6191 => ['word' => "缪", 'first_char' => 'M'],
+            -5414 => ['word' => "贲", 'first_char' => 'B'],
+            -4102 => ['word' => "嵇", 'first_char' => 'J'],
+            -8969 => ['word' => "荀", 'first_char' => 'X'],
+            -4938 => ['word' => "於", 'first_char' => 'Y'],
+            -9017 => ['word' => "芮", 'first_char' => 'R'],
+            -2848 => ['word' => "羿", 'first_char' => 'Y'],
+            -9477 => ['word' => "邴", 'first_char' => 'B'],
+            -9485 => ['word' => "隗", 'first_char' => 'K'],
+            -6731 => ['word' => "宓", 'first_char' => 'M'],
+            -9299 => ['word' => "郗", 'first_char' => 'X'],
+            -5905 => ['word' => "栾", 'first_char' => 'L'],
+            -4393 => ['word' => "钭", 'first_char' => 'T'],
+            -9300 => ['word' => "郜", 'first_char' => 'G'],
+            -8706 => ['word' => "蔺", 'first_char' => 'L'],
+            -3613 => ['word' => "胥", 'first_char' => 'X'],
+            -8777 => ['word' => "莘", 'first_char' => 'S'],
+            -6708 => ['word' => "逄", 'first_char' => 'P'],
+            -9302 => ['word' => "郦", 'first_char' => 'L'],
+            -5965 => ['word' => "璩", 'first_char' => 'Q'],
+            -6745 => ['word' => "濮", 'first_char' => 'P'],
+            -4888 => ['word' => "扈", 'first_char' => 'H'],
+            -9309 => ['word' => "郏", 'first_char' => 'J'],
+            -5428 => ['word' => "晏", 'first_char' => 'Y'],
+            -2849 => ['word' => "暨", 'first_char' => 'J'],
+            -7206 => ['word' => "阙", 'first_char' => 'Q'],
+            -4945 => ['word' => "殳", 'first_char' => 'S'],
+            -9753 => ['word' => "夔", 'first_char' => 'K'],
             -10041 => ['word' => "厍", 'first_char' => 'S'],
-            -5429  => ['word' => "晁", 'first_char' => 'C'],
-            -2396  => ['word' => "訾", 'first_char' => 'Z'],
-            -7205  => ['word' => "阚", 'first_char' => 'K'],
+            -5429 => ['word' => "晁", 'first_char' => 'C'],
+            -2396 => ['word' => "訾", 'first_char' => 'Z'],
+            -7205 => ['word' => "阚", 'first_char' => 'K'],
             -10049 => ['word' => "乜", 'first_char' => 'N'],
             -10015 => ['word' => "蒯", 'first_char' => 'K'],
-            -3133  => ['word' => "竺", 'first_char' => 'Z'],
-            -6698  => ['word' => "逯", 'first_char' => 'L'],
-            -9799  => ['word' => "俟", 'first_char' => 'Q'],
-            -6749  => ['word' => "澹", 'first_char' => 'T'],
-            -7220  => ['word' => "闾", 'first_char' => 'L'],
+            -3133 => ['word' => "竺", 'first_char' => 'Z'],
+            -6698 => ['word' => "逯", 'first_char' => 'L'],
+            -9799 => ['word' => "俟", 'first_char' => 'Q'],
+            -6749 => ['word' => "澹", 'first_char' => 'T'],
+            -7220 => ['word' => "闾", 'first_char' => 'L'],
             -10047 => ['word' => "亓", 'first_char' => 'Q'],
             -10005 => ['word' => "仉", 'first_char' => 'Z'],
-            -3417  => ['word' => "颛", 'first_char' => 'Z'],
-            -6431  => ['word' => "驷", 'first_char' => 'S'],
-            -7226  => ['word' => "闫", 'first_char' => 'Y'],
-            -9293  => ['word' => "鄢", 'first_char' => 'Y'],
-            -6205  => ['word' => "缑", 'first_char' => 'G'],
-            -9764  => ['word' => "佘", 'first_char' => 'S'],
-            -9818  => ['word' => "佴", 'first_char' => 'N'],
-            -9509  => ['word' => "谯", 'first_char' => 'Q'],
-            -3122  => ['word' => "笪", 'first_char' => 'D'],
-            -9823  => ['word' => "佟", 'first_char' => 'T'],
+            -3417 => ['word' => "颛", 'first_char' => 'Z'],
+            -6431 => ['word' => "驷", 'first_char' => 'S'],
+            -7226 => ['word' => "闫", 'first_char' => 'Y'],
+            -9293 => ['word' => "鄢", 'first_char' => 'Y'],
+            -6205 => ['word' => "缑", 'first_char' => 'G'],
+            -9764 => ['word' => "佘", 'first_char' => 'S'],
+            -9818 => ['word' => "佴", 'first_char' => 'N'],
+            -9509 => ['word' => "谯", 'first_char' => 'Q'],
+            -3122 => ['word' => "笪", 'first_char' => 'D'],
+            -9823 => ['word' => "佟", 'first_char' => 'T'],
         ];
         if (array_key_exists($asc, $rare_arr) && $rare_arr[$asc]['first_char']) {
             return $rare_arr[$asc]['first_char'];
@@ -243,10 +247,10 @@ class Helper
     /**
      * 字符替换
      *
-     * @param null     $str     要替换的字符
-     * @param string   $new_str 用来替换的字符
-     * @param int      $start   开始位置
-     * @param int|null $length  替换长度
+     * @param null $str 要替换的字符
+     * @param string $new_str 用来替换的字符
+     * @param int $start 开始位置
+     * @param int|null $length 替换长度
      *
      * @return string|string[]
      */
@@ -267,8 +271,8 @@ class Helper
     /**
      * 隐藏手机号
      *
-     * @param null   $phone 手机号
-     * @param string $str   用来替换的字符
+     * @param null $phone 手机号
+     * @param string $str 用来替换的字符
      *
      * @return string|string[]
      */
@@ -280,8 +284,8 @@ class Helper
     /**
      * 隐藏身份证号
      *
-     * @param null   $id_number 身份证号
-     * @param string $str       用来替换的字符
+     * @param null $id_number 身份证号
+     * @param string $str 用来替换的字符
      *
      * @return string|string[]
      */
@@ -303,7 +307,7 @@ class Helper
     public function getDistance($lng, $lat, $lng1, $lat1)
     {
         $EARTH_RADIUS = 6370.996; // 地球半径系数
-        $PI           = 3.1415926;
+        $PI = 3.1415926;
 
         $radLat1 = $lat * $PI / 180.0;
         $radLat2 = $lat1 * $PI / 180.0;
@@ -349,8 +353,8 @@ class Helper
      */
     public function redis(string $connect = '127.0.0.1', string $port = '6379', string $password = '')
     {
-        $this->redis_connect  = $connect;
-        $this->redis_port     = $port;
+        $this->redis_connect = $connect;
+        $this->redis_port = $port;
         $this->redis_password = $password;
 
         return $this->redisConnect();
@@ -370,8 +374,8 @@ class Helper
      * redis 锁
      *
      * @param        $key
-     * @param int    $expire_date
-     * @param int    $count
+     * @param int $expire_date
+     * @param int $count
      *
      * @return bool
      */
@@ -469,14 +473,14 @@ class Helper
     {
         $birthday = strtotime($birthday);
         //格式化出生时间年月日
-        $byear  = date('Y', $birthday);
+        $byear = date('Y', $birthday);
         $bmonth = date('m', $birthday);
-        $bday   = date('d', $birthday);
+        $bday = date('d', $birthday);
 
         //格式化当前时间年月日
-        $tyear  = date('Y');
+        $tyear = date('Y');
         $tmonth = date('m');
-        $tday   = date('d');
+        $tday = date('d');
 
         //开始计算年龄
         $age = $tyear - $byear;
@@ -497,7 +501,7 @@ class Helper
     public function getZodiac($birthday)
     {
         $animals = ['子鼠', '丑牛', '寅虎', '卯兔', '辰龙', '巳蛇', '午马', '未羊', '申猴', '酉鸡', '戌狗', '亥猪'];
-        $key     = (date('Y', strtotime($birthday)) - 1900) % 12;
+        $key = (date('Y', strtotime($birthday)) - 1900) % 12;
 
         return $animals[$key];
     }
@@ -512,7 +516,7 @@ class Helper
     public function getConstellation($date)
     {
         $month = date('m', strtotime($date));
-        $day   = date('d', strtotime($date));
+        $day = date('d', strtotime($date));
 
         if (($month == 1 && $day >= 20) || ($month == 2 && $day <= 18)) {
             $constellation = "水瓶座";
@@ -699,7 +703,7 @@ class Helper
         if (!file_exists(__DIR__ . '/address-code.php')) {
             return '';
         }
-        $code      = substr($id_number, 0, 6);
+        $code = substr($id_number, 0, 6);
         $addresses = require 'address-code.php';
 
         return $this->arrayGet($addresses, $code);
@@ -720,10 +724,10 @@ class Helper
     /**
      * 生成日期数组
      *
-     * @param string $start    开始时间
-     * @param string $end      结束时间
-     * @param string $format   生成的时间格式
-     * @param int    $interval 生成的时间间隔(默认一天)
+     * @param string $start 开始时间
+     * @param string $end 结束时间
+     * @param string $format 生成的时间格式
+     * @param int $interval 生成的时间间隔(默认一天)
      *
      * @return array|false[]|string[]
      */
@@ -751,7 +755,7 @@ class Helper
      *
      * @param       $url
      * @param       $method
-     * @param null  $postfields
+     * @param null $postfields
      * @param array $headers
      *
      * @return array
@@ -759,7 +763,7 @@ class Helper
     public function httpRequest($url, $method, $postfields = null, array $headers = [])
     {
         $method = strtoupper($method);
-        $ci     = curl_init();
+        $ci = curl_init();
 
         /* Curl settings */
         curl_setopt($ci, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
@@ -796,9 +800,9 @@ class Helper
         curl_setopt($ci, CURLINFO_HEADER_OUT, true);
 
         /*curl_setopt($ci, CURLOPT_COOKIE, $Cookiestr); * *COOKIE带过去** */
-        $response     = curl_exec($ci);
+        $response = curl_exec($ci);
         $request_info = curl_getinfo($ci);
-        $http_code    = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+        $http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
 
         curl_close($ci);
 
@@ -808,7 +812,7 @@ class Helper
     /**
      * 把正方形图片裁剪为圆形
      *
-     * @param string $path      原图片路径或者二进制字符串
+     * @param string $path 原图片路径或者二进制字符串
      * @param string $save_path 裁剪完图片保存路径，如果为空则返回图片的二进制流数据
      *
      * @return bool|false|string 如果返回值为false 则裁剪图片失败否则裁剪完成，$save_path为空则返回二进制数据，否则为true
@@ -840,7 +844,7 @@ class Helper
         for ($x = 0; $x < $w; $x++) {
             for ($y = 0; $y < $h; $y++) {
                 // 获取原图片指定坐标点的像素值
-                $c  = imagecolorat($src, $x, $y);
+                $c = imagecolorat($src, $x, $y);
                 $_x = $x - $w / 2;
                 $_y = $y - $h / 2;
                 if ((($_x * $_x) + ($_y * $_y)) < ($r * $r)) {
@@ -877,9 +881,9 @@ class Helper
     /**
      * 修改图片大小
      *
-     * @param string $path      图片路径或者图片二进制数据
-     * @param int    $w         图片宽度
-     * @param int    $h         图片高度
+     * @param string $path 图片路径或者图片二进制数据
+     * @param int $w 图片宽度
+     * @param int $h 图片高度
      * @param string $save_path 保存路径，如果为空则返回图片二进制数据
      *
      * @return bool|false|string
@@ -899,8 +903,8 @@ class Helper
             return false;
         }
         $new_pic = imagecreatetruecolor($w, $h);
-        $s_w     = imagesx($image);
-        $s_h     = imagesy($image);
+        $s_w = imagesx($image);
+        $s_h = imagesy($image);
         // 关闭图像混色
         imagealphablending($new_pic, false);
         // 设置图片保存透明通道
@@ -927,13 +931,13 @@ class Helper
     }
 
     /**
-     * @param string   $dist_path    要添加水印的图片或路径
-     * @param string   $water_path   水印图片或路径
-     * @param int      $x            水印放置X轴位置
-     * @param int      $y            水印放置Y轴位置
-     * @param int|null $water_width  水印图片宽
+     * @param string $dist_path 要添加水印的图片或路径
+     * @param string $water_path 水印图片或路径
+     * @param int $x 水印放置X轴位置
+     * @param int $y 水印放置Y轴位置
+     * @param int|null $water_width 水印图片宽
      * @param int|null $water_height 水印图片高
-     * @param string   $save_path    加我水印后保存路径如果为空返回图片二进制字符串
+     * @param string $save_path 加我水印后保存路径如果为空返回图片二进制字符串
      *
      * @return bool|false|string
      */
@@ -957,7 +961,7 @@ class Helper
         if (!$water_image) {
             return false;
         }
-        $water_width  = imagesx($water_image);
+        $water_width = imagesx($water_image);
         $water_height = imagesy($water_image);
         imagecopy($dist_image, $water_image, $x, $y, 0, 0, $water_width, $water_height);
         $data = false;
@@ -983,7 +987,7 @@ class Helper
     /**
      * 修改小程序二维码的logo
      *
-     * @param string $path      小程序码图片或者二进制数据
+     * @param string $path 小程序码图片或者二进制数据
      * @param string $logo_path logo图片地址或者二进制数据
      * @param string $save_path 如果为空则返回图片二进制流字符串
      *
@@ -1002,9 +1006,90 @@ class Helper
         // 计算logo占二维码的宽度和高度
         $logo_w = $w / 2.2;
         // 计算logo在图片上的位置
-        $x    = ($w - $logo_w) / 2;
+        $x = ($w - $logo_w) / 2;
         $logo = $this->imageRound($logo_path);
 
         return $this->addImageWater($path, $logo, $x, $x, $logo_w, $logo_w, $save_path);
+    }
+
+    /**
+     * @param string $path 图片路径或者二进制数据
+     * @param string $font 字体路径
+     * @param string $text 水印文字
+     * @param int $x 水印放置X轴位置
+     * @param int $y 水印放置Y轴位置
+     * @param null|array $option 水印文字的颜色 字体大小 倾斜角度 文字锚点等设置
+     *                           ext_align=center 时以给定坐标为文字水印的放置中心点
+     * @param string $save_path 保存路径，如果保存路径为空则返回图片二进制数据
+     * @return bool|false|string
+     */
+    public function addTextWater($path, $font, $text, $x, $y, $option = null, $save_path = '')
+    {
+        if (!$path || !$font || !$text || !$x || !$y) {
+            return false;
+        }
+        if (@!is_file($font)) {
+            return false;
+        }
+        if (@is_file($path)) {
+            // 如果传入的是文件路径则打开文件再创建图片
+            $dist_image = imagecreatefromstring(file_get_contents($path));
+        } else {
+            // 通过二进制字符串创建图片对象
+            $dist_image = @imagecreatefromstring($path);
+        }
+        if (!$dist_image) {
+            return false;
+        }
+        // 关闭图像混色
+        imagealphablending($dist_image, false);
+        // 设置图片保存透明通道
+        imagesavealpha($dist_image, true);
+        $option = $option ?: [];
+        if (empty($option['color'])) {
+            $option['color'] = ['red' => 255, 'green' => 255, 'blue' => 255];
+        }
+        if (empty($option['size'])) {
+            $option['size'] = 14;
+        }
+        if (empty($option['angle'])) {
+            $option['angle'] = 0;
+        }
+        if (empty($option['text_align'])) {
+            $option['text_align'] = '';
+        }
+        // 已给定点为锚点进行文字居中
+        if ($option['text_align'] == 'center') {
+            // 获取文本所占像素
+            $text_image_pos = imagettfbbox($option['size'], $option['angle'], $font, $text);
+            if (!$text_image_pos) {
+                return false;
+            }
+            // 获取文本所占高度
+            $t_h = $text_image_pos[1];
+            // 获取文本所占宽度
+            $t_w = $text_image_pos[2];
+            // 计算文字居中的X和Y坐标
+            $x = $x - $t_w / 2;
+            $y = $y - $t_h / 2;
+        }
+        $color = imagecolorallocate($dist_image, $option['color']['red'], $option['color']['green'], $option['color']['blue']);
+        imagettftext($dist_image, $option['size'], $option['angle'], $x, $y, $color, $font, $text);
+        $data = false;
+        if (!$save_path) {
+            // 如果保存路径为空则创建临时文件
+            $save_path = tempnam(sys_get_temp_dir(), 'image_change_size');
+            if (imagepng($dist_image, $save_path)) {
+                // 如果图片保存到临时文件成功则读取图片的二进制数据
+                $data = file_get_contents($save_path);
+                // 删除临时文件
+                @unlink($save_path);
+            }
+        } else {
+            // 保存图片到指定路径
+            $data = imagepng($dist_image, $save_path);
+        }
+        imagedestroy($dist_image);
+        return $data;
     }
 }
