@@ -1,59 +1,102 @@
 <?php
 
+spl_autoload_register(function ($class_name) {
+    require_once "utils/$class_name.php";
+});
+
 class Helper
 {
-    private static $instance;
-
-    private $redis_connect = '127.0.0.1';
-
-    private $redis_port = '6379';
-
-    private $redis_password = '';
-
-    public $redis_instance = null;
-
-    private $pending_date = '';
-
-    private function __construct()
+    /**
+     * 锁
+     * @return RedisLock
+     */
+    public static function redisLock()
     {
+        return RedisLock::getInstance();
     }
 
-    private function __clone()
+    /**
+     * 身份证
+     * @param $id
+     * @return IdCard
+     */
+    public static function idCard($id)
     {
+        return new IdCard($id);
     }
 
-    public static function make()
+    /**
+     * 图像处理
+     * @param $file
+     * @return Image
+     */
+    public static function image($file)
     {
-        if (!self::$instance instanceof self) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
+        return new Image($file);
     }
 
+    /**
+     * 概率算法
+     * @param $arr
+     * @return Lottery
+     */
+    public static function lottery($arr)
+    {
+        return new Lottery($arr);
+    }
 
+    /**
+     * 图形验证码
+     * @param $width
+     * @param $height
+     * @param $codeNum
+     * @return Captcha
+     */
+    public static function captcha($width = 80, $height = 20, $codeNum = 4)
+    {
+        return new Captcha($width, $height, $codeNum);
+    }
+
+    /**
+     * 链式调用PHP自带函数
+     * @param $data
+     * @return Chain
+     */
+    public static function chain($data)
+    {
+        return new Chain($data);
+    }
+}
+
+
+if (!function_exists('_dump')) {
     /**
      * 比 var_dump() 要好看的打印
      *
      * @param $data
      */
-    public function dump($data)
+    function _dump($data)
     {
         highlight_string("<?php \n\n" . var_export($data, true) . ";\n\n?>");
     }
+}
 
-    public function dd($data)
+
+if (!function_exists('_dd')) {
+    function _dd($data)
     {
-        $this->dump($data);
+        _dump($data);
         die;
     }
+}
 
+if (!function_exists('get_ip')) {
     /**
      * 获取 IP 地址
      *
      * @return mixed|string
      */
-    public function getIp()
+    function get_ip()
     {
         if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
             $cip = $_SERVER["HTTP_CLIENT_IP"];
@@ -67,28 +110,34 @@ class Helper
 
         return $cip;
     }
+}
 
-    public function arrayGet(array $array, $key, $default = null)
+if (!function_exists('_array_get')) {
+    function _array_get(array $array, $key, $default = null)
     {
         return $array[$key] ?? $default;
     }
+}
 
+if (!function_exists('domain_name')) {
     /**
      * 获取域名
      *
      * @return string
      */
-    public function getDomainName()
+    function domain_name()
     {
         $http_type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
 
         return $http_type . $_SERVER['HTTP_HOST'];
     }
+}
 
+if (!function_exists('first_char')) {
     /**
      * 获取首字母
      */
-    public function getFirstChar($str)
+    function first_char($str)
     {
         if (empty($str)) {
             return '';
@@ -143,11 +192,11 @@ class Helper
             return 'D';
         }
 
-        return $this->rareWords($asc);
+        return rare_words($asc);
     }
 
     //百家姓中的生僻字
-    public function rareWords($asc = '')
+    function rare_words($asc = '')
     {
         $rare_arr = [
             -3652 => ['word' => "窦", 'first_char' => 'D'],
@@ -217,7 +266,9 @@ class Helper
             return null;
         }
     }
+}
 
+if (!function_exists('str_encode')) {
     /**
      * 加密字符串
      *
@@ -225,11 +276,13 @@ class Helper
      *
      * @return string
      */
-    public function strEncode(string $data)
+    function str_encode(string $data)
     {
         return base64_encode(openssl_encrypt($data, 'DES-ECB', md5('encrypt_and_decode')));
     }
+}
 
+if (!function_exists('str_decode')) {
     /**
      * 解密字符串
      *
@@ -237,13 +290,15 @@ class Helper
      *
      * @return false|string
      */
-    public function strDecode(string $data)
+    function str_decode(string $data)
     {
         $str = openssl_decrypt(base64_decode($data), 'DES-ECB', md5('encrypt_and_decode'));
 
         return $str ?: '';
     }
+}
 
+if (!function_exists('_str_replace')) {
     /**
      * 字符替换
      *
@@ -254,7 +309,7 @@ class Helper
      *
      * @return string|string[]
      */
-    public function strReplace($str, string $new_str, int $start, int $length = null)
+    function _str_replace($str, string $new_str, int $start, int $length = null)
     {
         if ($str == '') {
             return '';
@@ -267,7 +322,9 @@ class Helper
 
         return substr_replace($str, $new_str, $start, $length);
     }
+}
 
+if (!function_exists('hide_phone_number')) {
     /**
      * 隐藏手机号
      *
@@ -276,11 +333,13 @@ class Helper
      *
      * @return string|string[]
      */
-    public function hidePhoneNumber($phone, string $str = '*')
+    function hide_phone_number($phone, string $str = '*')
     {
-        return $this->strReplace($phone, $str, 3, 4);
+        return _str_replace($phone, $str, 3, 4);
     }
+}
 
+if (!function_exists('hide_id_number')) {
     /**
      * 隐藏身份证号
      *
@@ -289,124 +348,13 @@ class Helper
      *
      * @return string|string[]
      */
-    public function hideIdNumber($id_number, string $str = '*')
+    function hide_id_number($id_number, string $str = '*')
     {
-        return $this->strReplace($id_number, $str, 6, 8);
+        return _str_replace($id_number, $str, 6, 8);
     }
+}
 
-    /**
-     * 计算两点间的距离
-     *
-     * @param $lng
-     * @param $lat
-     * @param $lng1
-     * @param $lat1
-     *
-     * @return string
-     */
-    public function getDistance($lng, $lat, $lng1, $lat1)
-    {
-        $EARTH_RADIUS = 6370.996; // 地球半径系数
-        $PI = 3.1415926;
-
-        $radLat1 = $lat * $PI / 180.0;
-        $radLat2 = $lat1 * $PI / 180.0;
-
-        $radLng1 = $lng * $PI / 180.0;
-        $radLng2 = $lng1 * $PI / 180.0;
-
-        $a = $radLat1 - $radLat2;
-        $b = $radLng1 - $radLng2;
-
-        $distance = 2 * asin(sqrt(pow(sin($a / 2), 2) + cos($radLat1) * cos($radLat2) * pow(sin($b / 2), 2)));
-        $distance = $distance * $EARTH_RADIUS * 1000;
-
-        $tmp = round($distance / 1000, 1);
-        if ($tmp <= 0) {
-            return round($distance) . 'm';
-        }
-
-        return (round($distance / 1000, 1) > 0 ? round($distance / 1000, 1) : 0) . 'km';
-    }
-
-    /**
-     * 连接 redis
-     *
-     * @return $this
-     */
-    public function redisConnect()
-    {
-        $redis = new Redis();
-        $redis->connect($this->redis_connect, $this->redis_port);
-        $redis->auth($this->redis_password);
-        $this->redis_instance = $redis;
-
-        return $this;
-    }
-
-    /**
-     * @param string $connect
-     * @param string $port
-     * @param string $password
-     *
-     * @return $this
-     */
-    public function redis(string $connect = '127.0.0.1', string $port = '6379', string $password = '')
-    {
-        $this->redis_connect = $connect;
-        $this->redis_port = $port;
-        $this->redis_password = $password;
-
-        return $this->redisConnect();
-    }
-
-    /**
-     * 测试连接
-     */
-    public function redisTestConnect()
-    {
-        $this->redis_instance->set('test_redis_connect', 'redis ok');
-
-        $this->dd($this->redis_instance->get('test_redis_connect'));
-    }
-
-    /**
-     * redis 锁
-     *
-     * @param        $key
-     * @param int $expire_date
-     * @param int $count
-     *
-     * @return bool
-     */
-    public function redisLock($key, int $expire_date = 5, int $count = 1)
-    {
-        $key = md5($key);
-
-        $result = $this->redis_instance->incr($key);
-        if ($result <= $count) {
-            $this->redis_instance->expire($key, $expire_date);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * redis 解锁
-     *
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function redisUnlock($key)
-    {
-        $key = md5($key);
-
-        return $this->redis_instance->delete($key);
-    }
-
+if (!function_exists('is_phone_number')) {
     /**
      * 检查手机号:等级1-3
      *
@@ -415,7 +363,7 @@ class Helper
      *
      * @return false|int|void
      */
-    public function isPhoneNumber($number, int $grade = 2)
+    function is_phone_number($number, int $grade = 2)
     {
         switch ($grade) {
             case 1:
@@ -426,7 +374,9 @@ class Helper
                 return preg_match('/^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/', $number);
         }
     }
+}
 
+if (!function_exists('is_id_number')) {
     /**
      * 检查身份证号
      *
@@ -434,11 +384,13 @@ class Helper
      *
      * @return false|int
      */
-    public function isIdNumber($id_number)
+    function is_id_number($id_number)
     {
         return preg_match('/(^\d{8}(0\d|10|11|12)([0-2]\d|30|31)\d{3}$)|(^\d{6}(18|19|20)\d{2}(0\d|10|11|12)([0-2]\d|30|31)\d{3}(\d|X|x)$)/', $id_number);
     }
+}
 
+if (!function_exists('is_email')) {
     /**
      * 检查邮箱
      *
@@ -446,22 +398,26 @@ class Helper
      *
      * @return false|int
      */
-    public function isEmail($email)
+    function is_email($email)
     {
         return preg_match('/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/', $email);
     }
+}
 
+if (!function_exists('_redirect')) {
     /**
      * 重定向
      *
      * @param $url
      */
-    public function redirect($url)
+    function _redirect($url)
     {
         header("Location: $url");
         exit();
     }
+}
 
+if (!function_exists('get_age')) {
     /**
      * 计算年龄
      *
@@ -469,7 +425,7 @@ class Helper
      *
      * @return false|int|string
      */
-    public function getAge($birthday)
+    function get_age($birthday)
     {
         $birthday = strtotime($birthday);
         //格式化出生时间年月日
@@ -490,7 +446,9 @@ class Helper
 
         return $age;
     }
+}
 
+if (!function_exists('get_zodiac')) {
     /**
      * 获取生肖
      *
@@ -498,14 +456,16 @@ class Helper
      *
      * @return string
      */
-    public function getZodiac($birthday)
+    function get_zodiac($birthday)
     {
         $animals = ['子鼠', '丑牛', '寅虎', '卯兔', '辰龙', '巳蛇', '午马', '未羊', '申猴', '酉鸡', '戌狗', '亥猪'];
         $key = (date('Y', strtotime($birthday)) - 1900) % 12;
 
         return $animals[$key];
     }
+}
 
+if (!function_exists('get_constellation')) {
     /**
      * 获取星座
      *
@@ -513,7 +473,7 @@ class Helper
      *
      * @return string
      */
-    public function getConstellation($date)
+    function get_constellation($date)
     {
         $month = date('m', strtotime($date));
         $day = date('d', strtotime($date));
@@ -546,169 +506,9 @@ class Helper
 
         return $constellation;
     }
+}
 
-    /**
-     * 获取身份证信息
-     *
-     * @param $id_number
-     *
-     * @return array
-     */
-    public function getIdCardInfo($id_number)
-    {
-        // 性别
-        $gender = $this->getIdcardGender($id_number);
-
-        // 生日
-        $birthday = $this->getIdCardBirthday($id_number);
-
-        // 年龄
-        $age = $this->getIdcardAge($id_number);
-
-        // 生肖
-        $zodiac = $this->getIdCardZodiac($id_number);
-
-        // 星座
-        $constellation = $this->getIdCardConstellation($id_number);
-
-        // 地区
-        $area = $this->getIdCardArea($id_number);
-
-        // 籍贯
-        $hometown = $this->getIdCardHometown($id_number);
-
-
-        return compact('gender', 'birthday', 'age', 'zodiac', 'constellation', 'area', 'hometown');
-    }
-
-    /**
-     * 获取身份证 性别
-     *
-     * @param $id_number
-     *
-     * @return string
-     */
-    public function getIdcardGender($id_number)
-    {
-        return (int)substr($id_number, 16, 1) % 2 === 0 ? '女' : '男';
-    }
-
-    /**
-     * 获取身份证 生日
-     *
-     * @param $id_number
-     *
-     * @return false|string
-     */
-    public function getIdCardBirthday($id_number)
-    {
-        return date('Y-m-d', strtotime(substr($id_number, 6, 8)));
-    }
-
-    /**
-     * 获取身份证 年龄
-     *
-     * @param $id_number
-     *
-     * @return false|int|string
-     */
-    public function getIdcardAge($id_number)
-    {
-        return $this->getAge($this->getIdCardBirthday($id_number));
-    }
-
-    /**
-     * 获取身份证 生肖
-     *
-     * @param $id_number
-     *
-     * @return string
-     */
-    public function getIdCardZodiac($id_number)
-    {
-        return $this->getZodiac($this->getIdCardBirthday($id_number));
-    }
-
-    /**
-     * 获取身份证 星座
-     *
-     * @param $id_number
-     *
-     * @return string
-     */
-    public function getIdCardConstellation($id_number)
-    {
-        return $this->getConstellation($this->getIdCardBirthday($id_number));
-    }
-
-    /**
-     * 获取身份证 区域
-     *
-     * @param $id_number
-     *
-     * @return mixed|null
-     */
-    public function getIdCardArea($id_number)
-    {
-        $area = [
-            11 => "北京",
-            12 => "天津",
-            13 => "河北",
-            14 => "山西",
-            15 => "内蒙古",
-            21 => "辽宁",
-            22 => "吉林",
-            23 => "黑龙江",
-            31 => "上海",
-            32 => "江苏",
-            33 => "浙江",
-            34 => "安徽",
-            35 => "福建",
-            36 => "江西",
-            37 => "山东",
-            41 => "河南",
-            42 => "湖北",
-            43 => "湖南",
-            44 => "广东",
-            45 => "广西",
-            46 => "海南",
-            50 => "重庆",
-            51 => "四川",
-            52 => "贵州",
-            53 => "云南",
-            54 => "西藏",
-            61 => "陕西",
-            62 => "甘肃",
-            63 => "青海",
-            64 => "宁夏",
-            65 => "新疆",
-            71 => "台湾",
-            81 => "香港",
-            82 => "澳门",
-            91 => "国外",
-        ];
-
-        return $this->arrayGet($area, substr($id_number, 0, 2), '');
-    }
-
-    /**
-     * 获取身份证 籍贯
-     *
-     * @param $id_number
-     *
-     * @return mixed|null
-     */
-    public function getIdCardHometown($id_number)
-    {
-        if (!file_exists(__DIR__ . '/address-code.php')) {
-            return '';
-        }
-        $code = substr($id_number, 0, 6);
-        $addresses = require 'address-code.php';
-
-        return $this->arrayGet($addresses, $code);
-    }
-
+if (!function_exists('file_to_line')) {
     /**
      * 一行行读取文件
      *
@@ -716,11 +516,13 @@ class Helper
      *
      * @return array|false
      */
-    public function fileToLine($path)
+    function file_to_line($path)
     {
         return file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     }
+}
 
+if (!function_exists('date_array')) {
     /**
      * 生成日期数组
      *
@@ -731,7 +533,7 @@ class Helper
      *
      * @return array|false[]|string[]
      */
-    public function dateArray(string $start, string $end, string $format = 'Y-m-d', int $interval = 86400)
+    function date_array(string $start, string $end, string $format = 'Y-m-d', int $interval = 86400)
     {
         $dates = range(strtotime($start), strtotime($end), $interval);
 
@@ -739,17 +541,21 @@ class Helper
             return date($format, $_date);
         }, $dates);
     }
+}
 
+if (!function_exists('millisecond')) {
     /**
      * 获取当前毫秒
      *
-     * @return string
+     * @return int
      */
-    public function millisecond()
+    function millisecond()
     {
         return intval(microtime(true) * 1000);
     }
+}
 
+if (!function_exists('_http')) {
     /**
      * http 请求
      *
@@ -760,7 +566,7 @@ class Helper
      *
      * @return array
      */
-    public function httpRequest($url, $method, $postfields = null, array $headers = [])
+    function _http($url, $method, $postfields = null, array $headers = [])
     {
         $method = strtoupper($method);
         $ci = curl_init();
@@ -808,297 +614,18 @@ class Helper
 
         return compact('response', 'request_info', 'http_code');
     }
+}
 
-    /**
-     * 把正方形图片裁剪为圆形
-     *
-     * @param string $path 原图片路径或者二进制字符串
-     * @param string $save_path 裁剪完图片保存路径，如果为空则返回图片的二进制流数据
-     *
-     * @return bool|false|string 如果返回值为false 则裁剪图片失败否则裁剪完成，$save_path为空则返回二进制数据，否则为true
-     */
-    public function imageRound(string $path, string $save_path = '')
-    {
-        if (@is_file($path)) {
-            // 如果传入的是文件路径则打开文件再创建图片
-            $src = imagecreatefromstring(file_get_contents($path));
-        } else {
-            // 通过二进制字符串创建图片对象
-            $src = @imagecreatefromstring($path);
-        }
-        if (!$src) {
-            return false;
-        }
-        $w = imagesx($src);
-        $h = imagesy($src);
-        // 新建一个图像
-        $new_pic = imagecreatetruecolor($w, $h);
-        // 关闭图像混色
-        imagealphablending($new_pic, false);
-        // 设置图片保存透明通道
-        imagesavealpha($new_pic, true);
-        // 设置图片透明底色
-        $transparent = imagecolorallocatealpha($new_pic, 0, 0, 0, 127);
-        // 获取圆形半径
-        $r = $w / 2;
-        for ($x = 0; $x < $w; $x++) {
-            for ($y = 0; $y < $h; $y++) {
-                // 获取原图片指定坐标点的像素值
-                $c = imagecolorat($src, $x, $y);
-                $_x = $x - $w / 2;
-                $_y = $y - $h / 2;
-                if ((($_x * $_x) + ($_y * $_y)) < ($r * $r)) {
-                    // 设置像素颜色值为原图片像素的颜色值
-                    imagesetpixel($new_pic, $x, $y, $c);
-                } else {
-                    // 设置像素颜色值为透明
-                    imagesetpixel($new_pic, $x, $y, $transparent);
-                }
-            }
-        }
-        $data = false;
-        if (!$save_path) {
-            // 如果保存路径为空则创建临时文件
-            $save_path = tempnam(sys_get_temp_dir(), 'image_round');
-            if (imagepng($new_pic, $save_path)) {
-                // 如果图片保存到临时文件成功则读取图片的二进制数据
-                $data = file_get_contents($save_path);
-                // 删除临时文件
-                @unlink($save_path);
-            }
-        } else {
-            // 保存图片到指定路径
-            $data = imagepng($new_pic, $save_path);
-        }
-        // 销毁裁剪为的图片对象
-        imagedestroy($new_pic);
-        // 销毁原图片对象
-        imagedestroy($src);
-
-        return $data;
-    }
-
-    /**
-     * 修改图片大小
-     *
-     * @param string $path 图片路径或者图片二进制数据
-     * @param int $w 图片宽度
-     * @param int $h 图片高度
-     * @param string $save_path 保存路径，如果为空则返回图片二进制数据
-     *
-     * @return bool|false|string
-     */
-    public function imageChangeSize(string $path, int $w, int $h, string $save_path = '')
-    {
-        if (@is_file($path)) {
-            // 如果传入的是文件路径则打开文件再创建图片
-            $path = file_get_contents($path);
-        }
-        if (!$w || !$h) {
-            return $path;
-        }
-        // 通过二进制字符串创建图片对象
-        $image = @imagecreatefromstring($path);
-        if (!$image) {
-            return false;
-        }
-        $new_pic = imagecreatetruecolor($w, $h);
-        $s_w = imagesx($image);
-        $s_h = imagesy($image);
-        // 关闭图像混色
-        imagealphablending($new_pic, false);
-        // 设置图片保存透明通道
-        imagesavealpha($new_pic, true);
-        imagecopyresampled($new_pic, $image, 0, 0, 0, 0, $w, $h, $s_w, $s_h);
-        $data = false;
-        if (!$save_path) {
-            // 如果保存路径为空则创建临时文件
-            $save_path = tempnam(sys_get_temp_dir(), 'image_change_size');
-            if (imagepng($new_pic, $save_path)) {
-                // 如果图片保存到临时文件成功则读取图片的二进制数据
-                $data = file_get_contents($save_path);
-                // 删除临时文件
-                @unlink($save_path);
-            }
-        } else {
-            // 保存图片到指定路径
-            $data = imagepng($new_pic, $save_path);
-        }
-        imagedestroy($image);
-        imagedestroy($new_pic);
-
-        return $data;
-    }
-
-    /**
-     * @param string $dist_path 要添加水印的图片或路径
-     * @param string $water_path 水印图片或路径
-     * @param int $x 水印放置X轴位置
-     * @param int $y 水印放置Y轴位置
-     * @param int|null $water_width 水印图片宽
-     * @param int|null $water_height 水印图片高
-     * @param string $save_path 加我水印后保存路径如果为空返回图片二进制字符串
-     *
-     * @return bool|false|string
-     */
-    public function addImageWater(string $dist_path, string $water_path, int $x, int $y, int $water_width = null, int $water_height = null, string $save_path = '')
-    {
-        if (@is_file($dist_path)) {
-            // 如果传入的是文件路径则打开文件再创建图片
-            $dist_image = imagecreatefromstring(file_get_contents($dist_path));
-        } else {
-            // 通过二进制字符串创建图片对象
-            $dist_image = @imagecreatefromstring($dist_path);
-        }
-        if (!$dist_image) {
-            return false;
-        }
-        $water_image_str = $this->imageChangeSize($water_path, $water_width, $water_height);
-        if (!$water_image_str) {
-            return false;
-        }
-        $water_image = imagecreatefromstring($water_image_str);
-        if (!$water_image) {
-            return false;
-        }
-        $water_width = imagesx($water_image);
-        $water_height = imagesy($water_image);
-        imagecopy($dist_image, $water_image, $x, $y, 0, 0, $water_width, $water_height);
-        $data = false;
-        if (!$save_path) {
-            // 如果保存路径为空则创建临时文件
-            $save_path = tempnam(sys_get_temp_dir(), 'image_change_size');
-            if (imagepng($dist_image, $save_path)) {
-                // 如果图片保存到临时文件成功则读取图片的二进制数据
-                $data = file_get_contents($save_path);
-                // 删除临时文件
-                @unlink($save_path);
-            }
-        } else {
-            // 保存图片到指定路径
-            $data = imagepng($dist_image, $save_path);
-        }
-        imagedestroy($dist_image);
-        imagedestroy($water_image);
-
-        return $data;
-    }
-
-    /**
-     * 修改小程序二维码的logo
-     *
-     * @param string $path 小程序码图片或者二进制数据
-     * @param string $logo_path logo图片地址或者二进制数据
-     * @param string $save_path 如果为空则返回图片二进制流字符串
-     *
-     * @return bool|false|string
-     */
-    public function changeMiniProgramLogo(string $path, string $logo_path, string $save_path = '')
-    {
-        if (@is_file($path)) {
-            [$w, $h, $type] = getimagesize($path);
-        } else {
-            [$w, $h, $type] = getimagesizefromstring($path);
-        }
-        if (!$w) {
-            return false;
-        }
-        // 计算logo占二维码的宽度和高度
-        $logo_w = $w / 2.2;
-        // 计算logo在图片上的位置
-        $x = ($w - $logo_w) / 2;
-        $logo = $this->imageRound($logo_path);
-
-        return $this->addImageWater($path, $logo, $x, $x, $logo_w, $logo_w, $save_path);
-    }
-
-    /**
-     * @param string $path 图片路径或者二进制数据
-     * @param string $font 字体路径
-     * @param string $text 水印文字
-     * @param int $x 水印放置X轴位置
-     * @param int $y 水印放置Y轴位置
-     * @param null|array $option 水印文字的颜色 字体大小 倾斜角度 文字锚点等设置
-     *                           ext_align=center 时以给定坐标为文字水印的放置中心点
-     * @param string $save_path 保存路径，如果保存路径为空则返回图片二进制数据
-     * @return bool|false|string
-     */
-    public function addTextWater($path, $font, $text, $x, $y, $option = null, $save_path = '')
-    {
-        if (!$path || !$font || !$text || !$x || !$y) {
-            return false;
-        }
-        if (@!is_file($font)) {
-            return false;
-        }
-        if (@is_file($path)) {
-            // 如果传入的是文件路径则打开文件再创建图片
-            $dist_image = imagecreatefromstring(file_get_contents($path));
-        } else {
-            // 通过二进制字符串创建图片对象
-            $dist_image = @imagecreatefromstring($path);
-        }
-        if (!$dist_image) {
-            return false;
-        }
-        // 关闭图像混色
-        imagealphablending($dist_image, false);
-        // 设置图片保存透明通道
-        imagesavealpha($dist_image, true);
-        $option = $option ?: [];
-        if (empty($option['color'])) {
-            $option['color'] = ['red' => 255, 'green' => 255, 'blue' => 255];
-        }
-        if (empty($option['size'])) {
-            $option['size'] = 14;
-        }
-        if (empty($option['angle'])) {
-            $option['angle'] = 0;
-        }
-        if (empty($option['text_align'])) {
-            $option['text_align'] = '';
-        }
-        // 已给定点为锚点进行文字居中
-        if ($option['text_align'] == 'center') {
-            // 获取文本所占像素
-            $text_image_pos = imagettfbbox($option['size'], $option['angle'], $font, $text);
-            if (!$text_image_pos) {
-                return false;
-            }
-            // 获取文本所占高度
-            $t_h = $text_image_pos[1];
-            // 获取文本所占宽度
-            $t_w = $text_image_pos[2];
-            // 计算文字居中的X和Y坐标
-            $x = $x - $t_w / 2;
-            $y = $y - $t_h / 2;
-        }
-        $color = imagecolorallocate($dist_image, $option['color']['red'], $option['color']['green'], $option['color']['blue']);
-        imagettftext($dist_image, $option['size'], $option['angle'], $x, $y, $color, $font, $text);
-        $data = false;
-        if (!$save_path) {
-            // 如果保存路径为空则创建临时文件
-            $save_path = tempnam(sys_get_temp_dir(), 'image_change_size');
-            if (imagepng($dist_image, $save_path)) {
-                // 如果图片保存到临时文件成功则读取图片的二进制数据
-                $data = file_get_contents($save_path);
-                // 删除临时文件
-                @unlink($save_path);
-            }
-        } else {
-            // 保存图片到指定路径
-            $data = imagepng($dist_image, $save_path);
-        }
-        imagedestroy($dist_image);
-        return $data;
-    }
-
-    public static function miss($value)
+if (!function_exists('_miss')) {
+    function _miss($value)
     {
         return !isset($value) || empty($value);
     }
 
-    public static function ok($value)
+}
+
+if (!function_exists('_ok')) {
+    function _ok($value)
     {
         return isset($value) && !empty($value);
     }

@@ -14,8 +14,4 @@ require 'helper.php';
     }
 }
 
-
-
-// 使用
-Helper::make()->{$functionName}();
 ```
