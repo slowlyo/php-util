@@ -630,3 +630,47 @@ if (!function_exists('_ok')) {
         return isset($value) && !empty($value);
     }
 }
+
+if (!function_exists('encode_quotes')) {
+    /**
+     * 把引号字符串转义为html转义字符
+     * @param $val
+     * @return string|string[]
+     */
+    function encode_quotes($val) {
+        return str_replace("'", '&#39;', str_replace('"', '&#34;', $val));
+    }
+}
+
+if (!function_exists('decode_quotes')) {
+    /**
+     * 把html转义引号转换为正常的引号字符串
+     * @param $val
+     * @return string|string[]
+     */
+    function decode_quotes($val) {
+        return str_replace('&#39;', "'", str_replace('&#34;', '"', $val));
+    }
+}
+
+if (!function_exists('encode_quotes')) {
+    /**
+     * 把引号字符串转义为html转义字符
+     * @param $val
+     * @return string|string[]
+     */
+    function encode_quotes($val) {
+        return str_replace("'", '&#39;', str_replace('"', '&#34;', $val));
+    }
+}
+
+if (!function_exists('decode_quotes')) {
+    /**
+     * 把html转义引号转换为正常的引号字符串
+     * @param $val
+     * @return string|string[]
+     */
+    function decode_quotes($val) {
+        return str_replace('&#39;', "'", str_replace('&#34;', '"', $val));
+    }
+}
