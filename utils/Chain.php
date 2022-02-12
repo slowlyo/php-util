@@ -37,26 +37,56 @@ class Chain
         unset($this->data);
     }
 
+    /**
+     * 返回所有数据
+     *
+     * @return null
+     */
     public function all()
     {
         return $this->data;
     }
 
+    /**
+     * 返回第一条数据
+     *
+     * @return mixed|string
+     */
     public function first()
     {
         return $this->get(0);
     }
 
+    /**
+     * 返回最后一条数据
+     *
+     * @return mixed|string
+     */
     public function last()
     {
         return $this->get(count($this->data));
     }
 
-    public function get($key, $default = '')
+    /**
+     * 获取指定位置数据
+     *
+     * @param $key
+     * @param $default
+     *
+     * @return mixed|string
+     */
+    public function get($key, $default = null)
     {
         return $this->data[$key] ?? $default;
     }
 
+    /**
+     * 二维数组根据某个键值分组
+     *
+     * @param $key
+     *
+     * @return $this
+     */
     public function group($key)
     {
         $new = [];
@@ -104,6 +134,47 @@ class Chain
     public function exit()
     {
         exit($this->data); //参数为整型时回被当作状态码返回 e.g. 200/404/500.... 浏览器无可见输出
+    }
+
+    public function die()
+    {
+        die($this->data);
+    }
+
+    /**
+     * 返回更改后的数据, 而不是bool
+     */
+    public function ksort($sort_flags = null)
+    {
+        ksort($this->data, $sort_flags);
+        return $this;
+    }
+
+    /**
+     * 返回更改后的数据, 而不是bool
+     */
+    public function krsort($sort_flags = null)
+    {
+        krsort($this->data, $sort_flags);
+        return $this;
+    }
+
+    /**
+     * 返回更改后的数据, 而不是bool
+     */
+    public function sort($sort_flags = null)
+    {
+        sort($this->data, $sort_flags);
+        return $this;
+    }
+
+    /**
+     * 返回更改后的数据, 而不是bool
+     */
+    public function rsort($sort_flags = null)
+    {
+        rsort($this->data, $sort_flags);
+        return $this;
     }
 }
 
