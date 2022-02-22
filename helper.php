@@ -674,3 +674,64 @@ if (!function_exists('decode_quotes')) {
         return str_replace('&#39;', "'", str_replace('&#34;', '"', $val));
     }
 }
+
+if (!function_exists('_str_limit')) {
+    /**
+     * 将字符串以指定长度进行截断
+     *
+     * @param $value
+     * @param $limit
+     * @param $end
+     *
+     * @return mixed|string
+     */
+    function _str_limit($value, $limit, $end = '...')
+    {
+        if (mb_strwidth($value, 'UTF-8') <= $limit) {
+            return $value;
+        }
+
+        return rtrim(mb_strimwidth($value, 0, $limit, '', 'UTF-8')) . $end;
+    }
+}
+
+if (!function_exists('_str_length')) {
+    /**
+     * 字符串长度
+     *
+     * @param $value
+     * @param null $encoding
+     *
+     * @return false|int
+     */
+    function _str_length($value, $encoding = null)
+    {
+        if ($encoding) {
+            return mb_strlen($value, $encoding);
+        }
+
+        return mb_strlen($value);
+    }
+}
+
+if (!function_exists('_str_random')) {
+    /**
+     * 获取指定长度的指定字符串
+     *
+     * @param int $length
+     *
+     * @return string
+     */
+    function _str_random($length = 16)
+    {
+        $string = '';
+
+        while (($len = strlen($string)) < $length) {
+            $size   = $length - $len;
+            $bytes  = random_bytes($size);
+            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+        }
+
+        return $string;
+    }
+}
