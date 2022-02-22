@@ -735,3 +735,90 @@ if (!function_exists('_str_random')) {
         return $string;
     }
 }
+
+if (!function_exists('_str_random')) {
+    /**
+     * 获取指定长度的指定字符串
+     *
+     * @param int $length
+     *
+     * @return string
+     */
+    function _str_random($length = 16)
+    {
+        $string = '';
+
+        while (($len = strlen($string)) < $length) {
+            $size   = $length - $len;
+            $bytes  = random_bytes($size);
+            $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
+        }
+
+        return $string;
+    }
+}
+
+if (!function_exists('is_tel')) {
+    /**
+     * 是否电话
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function is_tel($val)
+    {
+        $val = trim($val);
+        if (!$val) {
+            return false;
+        }
+        if (preg_match('/^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/', $val)
+            || preg_match('/^\d{3,4}-[1-9]{1}\d{6,7}$/', $val)
+            || preg_match('/^[1-9]{1}\d{6,7}$/', $val)) {
+            return $val;
+        }
+        return false;
+    }
+}
+
+if (!function_exists('is_lng_or_lat')) {
+    /**
+     * 判断是否经纬度
+     *
+     * @param $val
+     *
+     * @return false|int
+     */
+    function is_lng_or_lat($val)
+    {
+        $val = trim($val);
+        if (!$val) {
+            return false;
+        }
+        if (preg_match('/^(:?[1-9]\d{0,2}|0)\.\d{4,18}$/', $val)) {
+            return $val;
+        }
+        return false;
+    }
+}
+
+if (!function_exists('is_ids')) {
+    /**
+     * 是否ID集合
+     *
+     * @param $val
+     *
+     * @return bool
+     */
+    function is_ids($val)
+    {
+        $val = trim($val, " \t\n\r \v,");
+        if (!$val) {
+            return false;
+        }
+        if (preg_match('/^(?:[1-9]\d{0,},{0,})+$/', $val)) {
+            return $val;
+        }
+        return false;
+    }
+}
