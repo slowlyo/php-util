@@ -848,3 +848,33 @@ if (!function_exists('_array_flatten')) {
         return $result;
     }
 }
+
+if (!function_exists('_array_cross_join')) {
+    /**
+     * 数组笛卡尔积
+     *
+     * @param iterable ...$arrays
+     *
+     * @return array
+     */
+    function _array_cross_join(...$arrays)
+    {
+        $results = [[]];
+
+        foreach ($arrays as $index => $array) {
+            $append = [];
+
+            foreach ($results as $product) {
+                foreach ($array as $item) {
+                    $product[$index] = $item;
+
+                    $append[] = $product;
+                }
+            }
+
+            $results = $append;
+        }
+
+        return $results;
+    }
+}
