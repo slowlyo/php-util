@@ -822,3 +822,29 @@ if (!function_exists('is_ids')) {
         return false;
     }
 }
+
+if (!function_exists('_array_flatten')) {
+    /**
+     * 展开数组
+     *
+     * @return array
+     */
+    function _array_flatten($array, $depth = INF)
+    {
+        $result = [];
+
+        foreach ($array as $item) {
+            if (!is_array($item)) {
+                $result[] = $item;
+            } else {
+                $values = $depth === 1 ? array_values($item) : _array_flatten($item, $depth - 1);
+
+                foreach ($values as $value) {
+                    $result[] = $value;
+                }
+            }
+        }
+
+        return $result;
+    }
+}
