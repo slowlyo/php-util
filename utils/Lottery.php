@@ -6,9 +6,11 @@
 
 class Lottery
 {
+    private $preArr;
+
     public function __construct($preArr)
     {
-        $this->getRand($preArr);
+        $this->preArr = $preArr;
     }
 
     /*
@@ -24,8 +26,9 @@ class Lottery
      * 这个算法简单，而且效率非常 高，
      * 关键是这个算法已在我们以前的项目中有应用，尤其是大数据量的项目中效率非常棒。
      */
-    public function getRand($proArr)
+    public function getRand()
     {
+        $proArr = $this->preArr;
         $result = '';
         //概率数组的总概率精度
         $proSum = array_sum($proArr);
@@ -75,7 +78,8 @@ class Lottery
             $arr[$val['id']] = $val['v'];
         }
 
-        $rid = $this->getRand($arr); //根据概率获取奖项id
+        $this->preArr = $arr;
+        $rid = $this->getRand(); //根据概率获取奖项id
 
         $res['yes'] = $prize_arr[$rid - 1]['prize']; //中奖项
         unset($prize_arr[$rid - 1]);                 //将中奖项从数组中剔除，剩下未中奖项
