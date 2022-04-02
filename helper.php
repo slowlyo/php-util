@@ -136,7 +136,6 @@ if (!function_exists('_dump')) {
     }
 }
 
-
 if (!function_exists('_dd')) {
     function _dd($data)
     {
@@ -214,7 +213,7 @@ if (!function_exists('_http')) {
      *
      * @param       $url
      * @param       $method
-     * @param null $postfields
+     * @param null  $postfields
      * @param array $headers
      *
      * @return array
@@ -269,7 +268,6 @@ if (!function_exists('_http')) {
     }
 }
 
-
 if (!function_exists('sn')) {
     /**
      * 生成sn
@@ -281,5 +279,18 @@ if (!function_exists('sn')) {
     function sn(string $prefix = '')
     {
         return $prefix . date('YmdHis') . mt_rand(10000, 100000);
+    }
+}
+
+if (!function_exists('html_to_string')) {
+    function html_to_string($content)
+    {
+        if (!$content) {
+            return '';
+        }
+        $handle1 = htmlspecialchars_decode($content);   //把一些预定义的 HTML 实体转换为字符
+        $handle2 = str_replace("&nbsp;", "", $handle1); //将空格替换成空
+
+        return strip_tags($handle2);                    //函数剥去字符串中的 HTML、XML 以及 PHP 的标签,获取纯文本内容
     }
 }

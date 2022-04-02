@@ -282,7 +282,6 @@ class StrHelper
         return $this;
     }
 
-
     public function get()
     {
         return $this->str;
