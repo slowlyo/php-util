@@ -10,7 +10,7 @@ require_once __DIR__ . "/utils/DateHelper.php";
 require_once __DIR__ . "/utils/Check.php";
 require_once __DIR__ . "/utils/phpqrcode.php";
 
-if (!function_exists('helper_chain')) {
+if (!function_exists('util_chain')) {
     /**
      * 链式调用
      *
@@ -18,13 +18,13 @@ if (!function_exists('helper_chain')) {
      *
      * @return Chain
      */
-    function helper_chain($data)
+    function util_chain($data)
     {
         return new Chain($data);
     }
 }
 
-if (!function_exists('helper_idcard')) {
+if (!function_exists('util_idcard')) {
     /**
      * 身份证相关
      *
@@ -32,13 +32,13 @@ if (!function_exists('helper_idcard')) {
      *
      * @return IdCard
      */
-    function helper_idcard($id_number)
+    function util_idcard($id_number)
     {
         return new IdCard($id_number);
     }
 }
 
-if (!function_exists('helper_lottery')) {
+if (!function_exists('util_lottery')) {
     /**
      * 概率算法
      *
@@ -46,13 +46,13 @@ if (!function_exists('helper_lottery')) {
      *
      * @return Lottery
      */
-    function helper_lottery(array $arr = [])
+    function util_lottery(array $arr = [])
     {
         return new Lottery($arr);
     }
 }
 
-if (!function_exists('helper_captcha')) {
+if (!function_exists('util_captcha')) {
     /**
      * 图像验证码
      *
@@ -62,13 +62,13 @@ if (!function_exists('helper_captcha')) {
      *
      * @return Captcha
      */
-    function helper_captcha($width = 80, $height = 20, $codeNum = 4)
+    function util_captcha($width = 80, $height = 20, $codeNum = 4)
     {
         return new Captcha($width, $height, $codeNum);
     }
 }
 
-if (!function_exists('helper_array')) {
+if (!function_exists('util_array')) {
     /**
      * 数组处理
      *
@@ -76,13 +76,13 @@ if (!function_exists('helper_array')) {
      *
      * @return ArrHelper
      */
-    function helper_array($arr)
+    function util_array($arr)
     {
         return new ArrHelper($arr);
     }
 }
 
-if (!function_exists('helper_str')) {
+if (!function_exists('util_str')) {
     /**
      * 处理字符串
      *
@@ -90,13 +90,13 @@ if (!function_exists('helper_str')) {
      *
      * @return StrHelper
      */
-    function helper_str($str)
+    function util_str($str)
     {
         return new StrHelper($str);
     }
 }
 
-if (!function_exists('helper_check')) {
+if (!function_exists('util_check')) {
     /**
      * 检查数据
      *
@@ -104,13 +104,13 @@ if (!function_exists('helper_check')) {
      *
      * @return Check
      */
-    function helper_check($data)
+    function util_check($data)
     {
         return new Check($data);
     }
 }
 
-if (!function_exists('helper_date')) {
+if (!function_exists('util_date')) {
     /**
      * 处理日期
      *
@@ -118,7 +118,7 @@ if (!function_exists('helper_date')) {
      *
      * @return DateHelper
      */
-    function helper_date($date = null)
+    function util_date($date = null)
     {
         return new DateHelper($date);
     }
