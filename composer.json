@@ -1,0 +1,27 @@
+{
+  "name": "slowlyo/php-util",
+  "alias": "php-util",
+  "description": "some util for php",
+  "type": "library",
+  "keywords": [
+    "php",
+    "util",
+    "php-util"
+  ],
+  "homepage": "https://github.com/Slowlyo/php-util",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Slowlyo",
+      "email": "yguren@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0"
+  },
+  "autoload": {
+    "files": [
+      "./helper.php"
+    ]
+  }
+}
