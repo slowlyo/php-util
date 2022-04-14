@@ -71,7 +71,7 @@ class IdCard
      */
     public function getAge()
     {
-        return helper_date($this->getBirthday())->getAge();
+        return util_date($this->getBirthday())->getAge();
     }
 
     /**
@@ -81,7 +81,7 @@ class IdCard
      */
     public function getZodiac()
     {
-        return helper_date($this->getBirthday())->getZodiac();
+        return util_date($this->getBirthday())->getZodiac();
     }
 
     /**
@@ -91,7 +91,7 @@ class IdCard
      */
     public function getConstellation()
     {
-        return helper_date($this->getBirthday())->getConstellation();
+        return util_date($this->getBirthday())->getConstellation();
     }
 
     /**
@@ -139,7 +139,7 @@ class IdCard
             91 => "国外",
         ];
 
-        return helper_array($area)->get(substr($this->id_number, 0, 2), '');
+        return util_array($area)->get(substr($this->id_number, 0, 2), '');
     }
 
     /**
@@ -155,6 +155,6 @@ class IdCard
         $code = substr($this->id_number, 0, 6);
         $addresses = require 'address-code.php';
 
-        return helper_array($addresses)->get($code);
+        return util_array($addresses)->get($code);
     }
 }
