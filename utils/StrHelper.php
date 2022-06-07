@@ -153,7 +153,6 @@ class StrHelper
         return base64_encode(openssl_encrypt($this->str, 'DES-ECB', md5('encrypt_and_decode')));
     }
 
-
     /**
      * 解密字符串
      *
@@ -169,9 +168,9 @@ class StrHelper
     /**
      * 字符替换
      *
-     * @param string $new_str 用来替换的字符
-     * @param int $start 开始位置
-     * @param int|null $length 替换长度
+     * @param string   $new_str 用来替换的字符
+     * @param int      $start   开始位置
+     * @param int|null $length  替换长度
      *
      */
     public function replace(string $new_str, int $start, int $length = null)
@@ -189,7 +188,6 @@ class StrHelper
 
         return $this;
     }
-
 
     /**
      * 隐藏手机号
@@ -216,7 +214,7 @@ class StrHelper
     /**
      * 将字符串以指定长度进行截断
      *
-     * @param $limit
+     * @param        $limit
      * @param string $end
      *
      * @return StrHelper
@@ -278,6 +276,29 @@ class StrHelper
         }
 
         $this->str = strip_tags(str_replace("&nbsp;", "", htmlspecialchars_decode($this->str)));
+
+        return $this;
+    }
+
+    /**
+     * 处理距离
+     *
+     * @param int $unit 0:m/km 1:米/千米 2:米/公里
+     *
+     * @return $this
+     */
+    public function distance(int $unit = 0)
+    {
+        $units = [
+            ['m', 'km'],
+            ['米', '千米'],
+            ['米', '公里'],
+        ];
+        if ($this->str < 1000) {
+            $this->str = $this->str . $units[$unit][0];
+        } else {
+            $this->str = round($this->str / 1000, 2) . $units[$unit][1];
+        }
 
         return $this;
     }
