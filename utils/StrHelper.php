@@ -295,7 +295,7 @@ class StrHelper
             ['米', '公里'],
         ];
         if ($this->str < 1000) {
-            $this->str = $this->str . $units[$unit][0];
+            $this->str = round($this->str, 2) . $units[$unit][0];
         } else {
             $this->str = round($this->str / 1000, 2) . $units[$unit][1];
         }
