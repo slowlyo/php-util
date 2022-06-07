@@ -284,10 +284,11 @@ class StrHelper
      * 处理距离
      *
      * @param int $unit 0:m/km 1:米/千米 2:米/公里
+     * @param int $precision
      *
      * @return $this
      */
-    public function distance(int $unit = 0)
+    public function distance(int $unit = 0, int $precision = 2)
     {
         $units = [
             ['m', 'km'],
@@ -295,9 +296,9 @@ class StrHelper
             ['米', '公里'],
         ];
         if ($this->str < 1000) {
-            $this->str = round($this->str, 2) . $units[$unit][0];
+            $this->str = round($this->str, $precision) . $units[$unit][0];
         } else {
-            $this->str = round($this->str / 1000, 2) . $units[$unit][1];
+            $this->str = round($this->str / 1000, $precision) . $units[$unit][1];
         }
 
         return $this;
