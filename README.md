@@ -15,3 +15,8 @@ require 'helper.php';
 }
 
 ```
+
+* composer
+```php
+composer require slowlyo/php-util
+```
